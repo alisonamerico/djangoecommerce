@@ -63,3 +63,6 @@ target/
 db.sqlite3
 
 local_settings.py
+notebook
+djangoecommerce/__pycache__/settings.cpython-36.pyc
+core/__pycache__/views.cpython-36.pyc
