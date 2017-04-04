@@ -144,6 +144,10 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'admin@djangoecommerce.com'
 
+#Auth
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 

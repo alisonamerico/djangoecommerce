@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>{% block title %}Django E-Commerc{% endblock %}</title>
+	<title>{% block title %}Django E-Commerce{% endblock %}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<link rel="stylesheet" href="{% static 'assets/bootstrap.min.css' %}" media="screen" />
@@ -28,9 +28,9 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="{% url 'catalog:product_list' %}" id="download">Categorias <span class="caret"></span></a>
               <ul class="dropdown-menu" aria-labelledby="download">
-							{% for category in categories %}
-								<li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
-							{% endfor %}
+				{% for category in categories %}
+				<li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+				{% endfor %}
               </ul>
             </li>
 			<li>
@@ -38,7 +38,11 @@
 			</li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Minha Conta</a></li>
+			{% if user.is_authenticated %}
+			<li><a href="{% url 'logout' %}">Sair</a></li>
+			{% else %}
+			<li><a href="{% url 'login' %}">Entrar</a></li>
+			{% endif %}
           </ul>
         </div>
       </div>
