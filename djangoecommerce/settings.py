@@ -155,6 +155,16 @@ AUTHENTICATION_BACKENDS = (
     'accounts.backends.ModelBackend',
 )
 
+# messages
+from django.contrib.messages import constants as messages_constantes
+MESSAGE_TAGS = {
+    messages_constantes.DEBUG: 'debug',
+    messages_constantes.INFO: 'info',
+    messages_constantes.SUCCESS: 'success',
+    messages_constantes.WARNING: 'warning',
+    messages_constantes.DEBUG: 'danger',
+}
+
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
