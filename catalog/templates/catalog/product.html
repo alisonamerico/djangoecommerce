@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  {{ product }} | {{block.super}}
+    {{ product }} | {{ block.super }}
 {% endblock %}
 
 {% block container %}
@@ -10,12 +10,15 @@
 </div>
 <div class="row">
   <div class="col-sm-4">
-    <a href="#" class="thumbnail">
-      <img src="http://placehold.it/350x250" alt="" />
-    </a>
+      <a href="#" class="thumbnail">
+          <img src="http://placehold.it/350x250" alt="" />
+      </a>
   </div>
   <div class="col-sm-8">
-    {{ product.description|linebreaks }}
+      <p class="text-right">
+          <a href="{% url 'checkout:create_cartitem' product.slug %}" class="btn btn-success">Adicionar ao Carrinho</a>
+      </p>
+      {{ product.description|linebreaks }}
   </div>
 </div>
 {% endblock %}
