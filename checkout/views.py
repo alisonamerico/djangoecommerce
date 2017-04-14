@@ -13,10 +13,15 @@ class CreateCartItemView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         product = get_object_or_404(Product, slug = self.kwargs['slug'])
-        cart_item = CartItem.objects.add_item(
+        if self.request.session.session_key is None:
+            self.request.session.save()
+        cart_item, created = CartItem.objects.add_item(
         self.request.session.session_key, product
         )
-        messages.success(self.request, 'Produto adicionado com sucesso')
+        if created:
+            messages.success(self.request, 'Produto adicionado com sucesso')
+        else:
+            messages.success(self.request, 'Produto atualizado com sucesso')
         return product.get_absolute_url()
 
 
