@@ -3,6 +3,8 @@
 from django.db import models
 from django.conf import settings
 
+from catalog.models import Product
+
 
 class CartItemManager(models.Manager):
 
@@ -42,9 +44,9 @@ class CartItem(models.Model):
 
 class OrderManager(models.Manager):
 
-    def create_order(self, user, cart_items):
+    def create_order(self, user, cart_itens):
         order = self.create(user=user)
-        for cart_item in cart_items:
+        for cart_item in cart_itens:
             order_item = OrderItem.objects.create(
                 order=order, quantity=cart_item.quantity, product=cart_item.product,
                 price=cart_item.price
@@ -86,6 +88,10 @@ class Order(models.Model):
 
     def __str__(self):
         return 'Pedido #{}'.format(self.pk)
+
+    def products(self):
+        products_ids = self.itens.values_list('product')
+        return Product.objects.filter(pk__in=products_ids)
 
 
 class OrderItem(models.Model):
