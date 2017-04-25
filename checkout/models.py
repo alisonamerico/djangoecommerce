@@ -93,6 +93,15 @@ class Order(models.Model):
         products_ids = self.itens.values_list('product')
         return Product.objects.filter(pk__in=products_ids)
 
+    def total(self):
+        aggregate_queryset = self.itens.aggregate(
+            total =models.Sum(
+                models.F('price') * models.F('quantity'),
+                output_field=models.DecimalField()
+            )
+        )
+        return aggregate_queryset['total']
+
 
 class OrderItem(models.Model):
 

@@ -1,7 +1,10 @@
+
 # coding=utf-8
 
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import RedirectView, TemplateView, ListView
+from django.views.generic import (
+    RedirectView, TemplateView, ListView, DetailView
+)
 from django.forms import modelformset_factory
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -73,9 +76,9 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         session_key = request.session.session_key
         if session_key and CartItem.objects.filter(cart_key=session_key).exists():
-            cart_itens = CartItem.objects.filter(cart_key=session_key)
+            cart_items = CartItem.objects.filter(cart_key=session_key)
             order = Order.objects.create_order(
-                user=request.user, cart_itens=cart_itens
+                user=request.user, cart_items=cart_items
             )
         else:
             messages.info(request, 'Não há itens no carrinho de compras')
@@ -94,7 +97,16 @@ class OrderListView(LoginRequiredMixin, ListView):
         return Order.objects.filter(user=self.request.user)
 
 
+class OrderDetailView(LoginRequiredMixin, DetailView):
+
+    template_name = 'checkout/order_detail.html'
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+
 create_cartitem = CreateCartItemView.as_view()
 cart_item = CartItemView.as_view()
 checkout = CheckoutView.as_view()
 order_list = OrderListView.as_view()
+order_detail = OrderDetailView.as_view()
