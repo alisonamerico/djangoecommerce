@@ -169,6 +169,11 @@ MESSAGE_TAGS = {
     messages_constantes.DEBUG: 'danger',
 }
 
+# PagSeguro
+PAGSEGURO_TOKEN = ''
+PAGSEGURO_EMAIL = 'alison.americo@gmail.com'
+PAGSEGURO_SANDBOX = True
+
 # Allow all host headers
 ALLOWED_HOSTS = ['*']
 
