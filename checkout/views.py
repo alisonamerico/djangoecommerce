@@ -10,7 +10,9 @@ from django.forms import modelformset_factory
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
-
+from django.conf import settings
+from django.http import HttpResponse
+import ipdb
 from catalog.models import Product
 
 from .models import CartItem, Order
@@ -77,10 +79,11 @@ class CheckoutView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         session_key = request.session.session_key
         if session_key and CartItem.objects.filter(cart_key=session_key).exists():
-            cart_itens = CartItem.objects.filter(cart_key=session_key)
+            cart_items = CartItem.objects.filter(cart_key=session_key)
             order = Order.objects.create_order(
-                user=request.user, cart_itens=cart_itens
+                user=request.user, cart_items=cart_items
             )
+
         else:
             messages.info(request, 'Não há itens no carrinho de compras')
             return redirect('checkout:cart_item')
@@ -117,6 +120,8 @@ class PagSeguroView(LoginRequiredMixin, RedirectView):
         pg.redirect_url = self.request.build_absolute_uri(
             reverse('checkout:order_detail', args=[order.pk])
         )
+        pg.notification_url
+        ipdb.set_trace()
         response = pg.checkout()
         return response.payment_url
 

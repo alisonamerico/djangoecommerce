@@ -17,7 +17,7 @@ Pedido #{{ order.pk }}
     <dd>{{ object.get_payment_option_display }}</dd>
 </dl>
 <h3>Itens do Pedido</h3>
-{% for item in object.itens.all %}
+{% for item in object.items.all %}
     <dl class="dl-horizontal">
         <dt>Produto</dt>
         <dd>{{ item.product }}</dd>

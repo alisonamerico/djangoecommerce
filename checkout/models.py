@@ -46,9 +46,9 @@ class CartItem(models.Model):
 
 class OrderManager(models.Manager):
 
-    def create_order(self, user, cart_itens):
+    def create_order(self, user, cart_items):
         order = self.create(user=user)
-        for cart_item in cart_itens:
+        for cart_item in cart_items:
             order_item = OrderItem.objects.create(
                 order=order, quantity=cart_item.quantity, product=cart_item.product,
                 price=cart_item.price
@@ -92,11 +92,11 @@ class Order(models.Model):
         return 'Pedido #{}'.format(self.pk)
 
     def products(self):
-        products_ids = self.itens.values_list('product')
+        products_ids = self.items.values_list('product')
         return Product.objects.filter(pk__in=products_ids)
 
     def total(self):
-        aggregate_queryset = self.itens.aggregate(
+        aggregate_queryset = self.items.aggregate(
             total=models.Sum(
                 models.F('price') * models.F('quantity'),
                 output_field=models.DecimalField()
@@ -112,11 +112,11 @@ class Order(models.Model):
         pg.sender = {
             'email': self.user.email
         }
-        pg.reference_prefix = None
+        pg.reference_prefix = ''
         pg.shipping = None
         pg.reference = self.pk
-        for item in self.itens.all():
-            pg.itens.append(
+        for item in self.items.all():
+            pg.items.append(
                 {
                     'id': item.product.pk,
                     'description': item.product.name,
@@ -128,7 +128,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
 
-    order = models.ForeignKey(Order, verbose_name='Pedido', related_name='itens')
+    order = models.ForeignKey(Order, verbose_name='Pedido', related_name='items')
     product = models.ForeignKey('catalog.Product', verbose_name='Produto')
     quantity = models.PositiveIntegerField('Quantidade', default=1)
     price = models.DecimalField('Preço', decimal_places=2, max_digits=8)
@@ -141,11 +141,11 @@ class OrderItem(models.Model):
         return '[{}] {}'.format(self.order, self.product)
 
 
-def post_save_cart_item(instance, **kwargs):
-    if instance.quantity < 1:
-        instance.delete()
+    def post_save_cart_item(instance, **kwargs):
+        if instance.quantity < 1:
+            instance.delete()
 
 
-models.signals.post_save.connect(
+    models.signals.post_save.connect(
     post_save_cart_item, sender=CartItem, dispatch_uid='post_save_cart_item'
-)
+    )
